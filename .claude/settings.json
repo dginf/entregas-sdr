@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(start cmd *)",
+      "Bash(findstr \"LISTEN\")",
+      "Bash(findstr \":27\")",
+      "Bash(taskkill /PID 59220 /F)",
+      "Bash(taskkill /PID 66948 /F)",
+      "PowerShell(Stop-Process -Id 59220 -Force)",
+      "PowerShell(Stop-Process -Id 66948 -Force)",
+      "PowerShell(Start-Process powershell -ArgumentList \"-NoExit\", \"-Command\", \"cd 'c:\\\\Users\\\\rafael.lsena\\\\Documents\\\\Entregas_SDR'; marimo run dashboard.py --port 2718\")",
+      "Bash(python -c ' *)",
+      "PowerShell(& \"C:\\\\Users\\\\rafael.lsena\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python314\\\\python.exe\" \"c:\\\\Users\\\\rafael.lsena\\\\Documents\\\\Entregas_SDR\\\\_query_programas.py\")",
+      "PowerShell(Stop-Process -Id \\(Get-NetTCPConnection -LocalPort 2718 -ErrorAction SilentlyContinue\\).OwningProcess -Force -ErrorAction SilentlyContinue; Start-Sleep -Seconds 1; Start-Process powershell -ArgumentList \"-NoExit\", \"-Command\", \"cd 'c:\\\\Users\\\\rafael.lsena\\\\Documents\\\\Entregas_SDR'; marimo run dashboard.py --port 2718\")",
+      "PowerShell(\\(Get-Command marimo\\).Source; marimo --version)",
+      "PowerShell(powershell -ExecutionPolicy ByPass -c \"irm https://astral.sh/uv/install.ps1 | iex\")",
+      "PowerShell($env:Path = \"C:\\\\Users\\\\rafael.lsena\\\\.local\\\\bin;$env:Path\"; cd \"c:\\\\Users\\\\rafael.lsena\\\\Documents\\\\Entregas_SDR\"; uv run marimo export html-wasm dashboard.py -o index.html --mode run)",
+      "PowerShell($env:Path = \"C:\\\\Users\\\\rafael.lsena\\\\.local\\\\bin;$env:Path\"; cd \"c:\\\\Users\\\\rafael.lsena\\\\Documents\\\\Entregas_SDR\"; Start-Process powershell -ArgumentList \"-NoExit\", \"-Command\", \"`$env:Path = 'C:\\\\Users\\\\rafael.lsena\\\\.local\\\\bin;' + `$env:Path; cd 'c:\\\\Users\\\\rafael.lsena\\\\Documents\\\\Entregas_SDR'; uv run python -m http.server --directory 'c:\\\\Users\\\\rafael.lsena\\\\Documents\\\\Entregas_SDR'\")",
+      "PowerShell($env:Path = \"C:\\\\Users\\\\rafael.lsena\\\\.local\\\\bin;$env:Path\"; cd \"c:\\\\Users\\\\rafael.lsena\\\\Documents\\\\Entregas_SDR\"; uv run convert_csv_to_parquet.py)",
+      "PowerShell($env:Path = \"C:\\\\Users\\\\rafael.lsena\\\\.local\\\\bin;$env:Path\"; Stop-Process -Id \\(Get-NetTCPConnection -LocalPort 2718 -ErrorAction SilentlyContinue\\).OwningProcess -Force -ErrorAction SilentlyContinue; Start-Process powershell -ArgumentList \"-NoExit\", \"-Command\", \"`$env:Path = 'C:\\\\Users\\\\rafael.lsena\\\\.local\\\\bin;' + `$env:Path; cd 'c:\\\\Users\\\\rafael.lsena\\\\Documents\\\\Entregas_SDR'; uv run marimo run dashboard.py --port 2718\")",
+      "PowerShell($env:Path = \"C:\\\\Users\\\\rafael.lsena\\\\.local\\\\bin;$env:Path\"; cd \"c:\\\\Users\\\\rafael.lsena\\\\Documents\\\\Entregas_SDR\"; uv run marimo run dashboard.py --port 2718)",
+      "PowerShell($env:Path = \"C:\\\\Users\\\\rafael.lsena\\\\.local\\\\bin;$env:Path\"; Stop-Process -Id \\(Get-NetTCPConnection -LocalPort 2718 -ErrorAction SilentlyContinue\\).OwningProcess -Force -ErrorAction SilentlyContinue; Start-Sleep -Seconds 1; cd \"c:\\\\Users\\\\rafael.lsena\\\\Documents\\\\Entregas_SDR\"; uv run marimo run dashboard.py --port 2718)",
+      "Read(//c/Users/rafael.lsena/.claude/projects/c--Users-rafael-lsena-Documents-Entregas-SDR/memory/**)"
+    ],
+    "additionalDirectories": [
+      "c:\\Users\\rafael.lsena\\.claude\\projects\\c--Users-rafael-lsena-Documents-Entregas-SDR\\memory"
+    ]
+  }
+}
