@@ -17,7 +17,7 @@ async def _():
         import micropip
         await micropip.install(["Jinja2", "pandas", "openpyxl", "plotly", "folium"])
         import pyodide.http
-        base_url = "https://r-giacomin.github.io/entregas_sdr/"
+        base_url = "https://dginf.github.io/entregas-sdr/"
 
         # Download para o sistema de arquivos virtual
         res1 = await pyodide.http.pyfetch(base_url + "agregado_detalhado_por_convenio_ano.parquet")
