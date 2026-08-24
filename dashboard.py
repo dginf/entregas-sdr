@@ -858,25 +858,6 @@ def _(
                 nan_fill_opacity=1.0
             ).add_to(_m)
 
-            nome_dict = dict(zip(map_data['COD_MUNIC_IBGE'], map_data['Municipio']))
-            val_dict = dict(zip(map_data['COD_MUNIC_IBGE'], map_data['execucao_per_capita']))
-
-            for feature in choropleth.geojson.data['features']:
-                codarea = feature['properties'].get('codarea', '')
-                if codarea in nome_dict:
-                    feature['properties']['nome_mun'] = nome_dict[codarea]
-                    valor = val_dict[codarea]
-                    feature['properties']['val_str'] = f"R$ {valor:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
-                else:
-                    feature['properties']['nome_mun'] = 'Sem dado'
-                    feature['properties']['val_str'] = 'N/A'
-
-            folium.GeoJsonTooltip(
-                fields=['nome_mun', 'codarea', 'val_str'],
-                aliases=['Município: ', 'Código IBGE: ', 'Per capita: '],
-                style=("background-color: white; color: #333333; font-family: arial; font-size: 12px; padding: 10px; border: 1px solid grey; border-radius: 5px;")
-            ).add_to(choropleth.geojson)
-
             fix_size_js = "<script>setTimeout(function() { var mapDiv = document.querySelector('.folium-map'); if (mapDiv) { mapDiv.style.width = '100%'; mapDiv.style.height = '600px'; var mapObj = window[mapDiv.id]; if (mapObj) { mapObj.invalidateSize(); mapObj.setView([-14.2350, -51.9253], 4.2); } } }, 200);</script>"
             _m.get_root().html.add_child(folium.Element(fix_size_js))
 
