@@ -783,7 +783,7 @@ def _(
         for feature in geojson_data['features']:
             if 'codarea' in feature['properties']:
                 codarea_original = feature['properties']['codarea']
-                feature['properties']['codarea'] = codarea_original[:-1] if codarea_original else ""
+                feature['properties']['cod6'] = codarea_original[:-1] if codarea_original else ""
 
         map_data = df_mun[['COD_MUNIC_IBGE', 'execucao_per_capita', 'Municipio', 'UF']].copy()
         map_data['COD_MUNIC_IBGE'] = map_data['COD_MUNIC_IBGE'].astype(str).apply(lambda x: x[:6].zfill(6))
@@ -791,77 +791,29 @@ def _(
         if map_data.empty:
             fig_map = mo.md("Sem dados para exibir no mapa.")
         else:
-            _m = folium.Map(location=[-14.2350, -51.9253], zoom_start=4.2, tiles="cartodbpositron", width='100%', height='600px', control_scale=True)
-            _m.fit_bounds([[-33.75, -73.98], [5.27, -34.79]])
-
-            # Cálculo de Quebra Natural Jenks (implementação pura, sem mapclassify)
-            def _jenks_breaks(data, k=5):
-                """Fisher-Jenks Natural Breaks em Python puro."""
-                data = sorted(data)
-                n = len(data)
-                if n <= k:
-                    return data
-                # Matrizes de programação dinâmica
-                lc = [[0] * (k + 1) for _ in range(n + 1)]
-                vc = [[float('inf')] * (k + 1) for _ in range(n + 1)]
-                for i in range(1, k + 1):
-                    lc[1][i] = 1
-                    vc[1][i] = 0.0
-                for l in range(2, n + 1):
-                    s1 = s2 = 0.0
-                    for m in range(l, 0, -1):
-                        val = data[m - 1]
-                        s1 += val
-                        s2 += val * val
-                        w = l - m + 1
-                        variance = s2 - (s1 * s1) / w
-                        if m > 1:
-                            for j in range(2, k + 1):
-                                new_val = variance + vc[m - 1][j - 1]
-                                if new_val < vc[l][j]:
-                                    lc[l][j] = m
-                                    vc[l][j] = new_val
-                    lc[l][1] = 1
-                    vc[l][1] = variance
-                # Recuperar as quebras
-                breaks = [data[-1]]
-                kk = n
-                for j in range(k, 1, -1):
-                    kk = lc[kk][j] - 1
-                    breaks.insert(0, data[kk])
-                breaks.insert(0, data[0])
-                return sorted(set(breaks))
-
-            vals = map_data['execucao_per_capita'].dropna()
-            if not vals.empty and vals.nunique() > 5:
-                try:
-                    bins_jenks = _jenks_breaks(vals.tolist(), k=5)
-                except Exception:
-                    bins_jenks = 5
-            else:
-                bins_jenks = 5
-
-            choropleth = folium.Choropleth(
-                geo_data=geojson_data,
-                data=map_data,
-                columns=["COD_MUNIC_IBGE", "execucao_per_capita"],
-                key_on="feature.properties.codarea",
-                fill_color="PuBuGn",
-                fill_opacity=0.9,
-                line_opacity=0.0,
-                legend_name="Execução per capita (R$)",
-                bins=bins_jenks,
-                highlight=True,
-                reset=True,
-                smooth_factor=2.5,
-                nan_fill_color="white",
-                nan_fill_opacity=1.0
-            ).add_to(_m)
-
-            fix_size_js = "<script>setTimeout(function() { var mapDiv = document.querySelector('.folium-map'); if (mapDiv) { mapDiv.style.width = '100%'; mapDiv.style.height = '600px'; var mapObj = window[mapDiv.id]; if (mapObj) { mapObj.invalidateSize(); mapObj.setView([-14.2350, -51.9253], 4.2); } } }, 200);</script>"
-            _m.get_root().html.add_child(folium.Element(fix_size_js))
-
-            fig_map = mo.Html(f'<div style="width: 100%; height: 600px; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">{_m._repr_html_()}</div>')
+            fig_plotly = px.choropleth(
+                map_data,
+                geojson=geojson_data,
+                locations='COD_MUNIC_IBGE',
+                featureidkey='properties.cod6',
+                color='execucao_per_capita',
+                color_continuous_scale='PuBuGn',
+                hover_name='Municipio',
+                hover_data={'UF': True, 'execucao_per_capita': ':.2f', 'COD_MUNIC_IBGE': False},
+                labels={'execucao_per_capita': 'Per capita (R$)', 'UF': 'Estado'},
+                title='Execução per capita por Município'
+            )
+            fig_plotly.update_geos(
+                fitbounds="locations",
+                visible=False
+            )
+            fig_plotly.update_layout(
+                height=600,
+                margin=dict(t=40, b=0, l=0, r=0),
+                coloraxis_colorbar=dict(title="R$"),
+                template='plotly_white'
+            )
+            fig_map = mo.ui.plotly(fig_plotly)
 
         # Top 10 Municipios
         top10 = df_mun.nlargest(10, 'execucao_per_capita').sort_values('execucao_per_capita', ascending=True)
